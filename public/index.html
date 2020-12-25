@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sequelize App</title>
+</head>
+
+<body>
+    <div>
+        <input id="name" type="text">
+        <button id="submit">Submit</button>
+    </div>
+    <div>
+        <ul class="user-list"></ul>
+    </div>
+
+    <script>
+        let users = [];
+
+        const updateUsersList = async () => {
+            let userList = document.querySelector('.user-list');
+            userList.innerHTML = '';
+
+            const res = await fetch('/users');
+            const users = await res.json();
+
+            users.forEach(user => {
+                let element = document.createElement('li');
+                element.innerHTML = `${user.id}: ${user.name}`;
+                userList.appendChild(element);
+            });
+        }
+
+        const submit = async () => {
+            const name = document.querySelector('#name').value;
+            console.log(name);
+
+            const res = await fetch('/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name })
+            })
+
+            const data = await res.json()
+            console.log(data);
+            updateUsersList();
+        }
+
+        document.querySelector('#submit').addEventListener('click', submit);
+        updateUsersList();
+    </script>
+</body>
+
+</html>
