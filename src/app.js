@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 
 const PORT = process.env.PORT || 5000;
-const sequelize = new Sequelize('postgres://postgres:12345@:5432/postgres');
+const sequelize = new Sequelize('postgres://postgres:12345@192.168.0.103:5432/postgres');
 
 try {
     sequelize.authenticate().then(() => console.log('Connection has been established successfully.'));
@@ -41,15 +41,24 @@ app.get('/users', async (req, res) => {
 });
 
 app.post('/users', async (req, res) => {
-    const data = req.body;
-    console.log(req.body);
+    try {
+        const data = req.body;
+        console.log(req.body);
+        let newUser;
 
-    if (data.name) {
-        const newUser = await User.create({ name: data.name });
+        if (data.name) {
+            newUser = User.build({ name: data.name });
+        }
+        if (data.favoriteColor) {
+            newUser.favoriteColor = data.favoriteColor;
+        }
+        await newUser.save();
         console.log(newUser.toJSON());
         return res.send(newUser.toJSON());
+    } catch (error) {
+        return res.status(500).send(error);
     }
-    res.send('No name provided');
+
 })
 
 app.listen(PORT, () => console.log(`Listening port ${PORT}...`));

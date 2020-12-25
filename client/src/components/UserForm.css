@@ -1,0 +1,39 @@
+.input-group {
+  margin-bottom: 1em;
+  display: flex;
+  align-items: center;
+  font-size: medium;
+}
+
+.input-group label {
+  width: 40%;
+  font-weight: 600;
+}
+
+.input-group input {
+  outline: none;
+  border-radius: 0.6rem;
+  font-size: inherit;
+  padding: 0.5em 1em;
+  width: 100%;
+  border: 1px solid lightgray;
+}
+
+.input-group input:focus {
+  box-shadow: 0 0 5px orange;
+}
+
+.submit {
+  font-size: medium;
+  font-weight: 600;
+  border: none;
+  background-color: rgb(255, 217, 0);
+  border-radius: 0.6rem;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.submit:focus {
+    outline-color: orange;
+}
