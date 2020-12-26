@@ -15,17 +15,18 @@ try {
 
 
 const User = sequelize.define('user', {
-    name: DataTypes.TEXT,
+    name: {
+        type: DataTypes.TEXT,
+        validate: { notEmpty: true }
+    },
     favoriteColor: {
         type: DataTypes.TEXT,
-        defaultValue: 'green'
+        defaultValue: 'green',
     },
-    age: DataTypes.INTEGER,
-    cash: DataTypes.INTEGER
 });
 
 (async () => {
-    await sequelize.sync({ force: true })
+    await sequelize.sync({ alter: true })
 })();
 
 app.use(express.json());
@@ -36,29 +37,25 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/users', async (req, res) => {
-    const users = await User.findAll();
+    const users = await User.findAll({
+        order: [
+            ['createdAt', 'DESC']
+        ]
+    });
     res.send(users);
 });
 
 app.post('/users', async (req, res) => {
     try {
-        const data = req.body;
+        const { name, favoriteColor } = req.body;
         console.log(req.body);
-        let newUser;
-
-        if (data.name) {
-            newUser = User.build({ name: data.name });
-        }
-        if (data.favoriteColor) {
-            newUser.favoriteColor = data.favoriteColor;
-        }
+        let newUser = User.build({ name, favoriteColor });
         await newUser.save();
         console.log(newUser.toJSON());
         return res.send(newUser.toJSON());
     } catch (error) {
         return res.status(500).send(error);
     }
-
 })
 
 app.listen(PORT, () => console.log(`Listening port ${PORT}...`));

@@ -1,11 +1,10 @@
 import React, { FormEvent, useState } from "react";
 import "./UserForm.css";
 
-export const UserForm = () => {
+export const UserForm = (props: any) => {
   const [name, setName] = useState("");
-  const [favoriteColor, setFavoriteColor] = useState("");
-  const [age, setAge] = useState(0);
-  const [cash, setCash] = useState(0);
+  const [favoriteColor, setFavoriteColor] = useState("orange");
+  const colors = ["red", "orange", "yellow", "green", "blue", "purple", "pink", "lightblue"];
 
   const createUser = async (event: FormEvent) => {
     event.preventDefault();
@@ -20,47 +19,33 @@ export const UserForm = () => {
     });
     const data = await res.json();
     console.log(data);
+    props.updateUsers();
   };
 
   return (
     <form className="user-form" onSubmit={createUser}>
-      <div className="input-group">
-        <label htmlFor="name">First Name</label>
-        <input
-          id="name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-        />
-      </div>
-      <div className="input-group">
-        <label htmlFor="favoriteColor">Favorite Color</label>
-        <input
-          id="favoriteColor"
-          value={favoriteColor}
-          onChange={(event) => setFavoriteColor(event.target.value)}
-        />
-      </div>
-      <div className="input-group">
-        <label htmlFor="age">Age</label>
-        <input
-          disabled
-          id="age"
-          value={age}
-          onChange={(event) => setAge(Number(event.target.value))}
-        />
-      </div>
-      <div className="input-group">
-        <label htmlFor="cash">Cash</label>
-        <input
-          disabled
-          id="cash"
-          value={cash}
-          onChange={(event) => setCash(Number(event.target.value))}
-        />
-      </div>
-      <div className="input-group">
-        <button className="submit">Submit</button>
-      </div>
+      <label htmlFor="name">First Name</label>
+      <input
+        id="name"
+        value={name}
+        onChange={(event) => setName(event.target.value)}
+      />
+
+      <label htmlFor="favorite-color">Favorite Color</label>
+      <select
+        id="favorite-color"
+        value={favoriteColor}
+        onChange={(event) => setFavoriteColor(event.target.value)}
+        style={{ backgroundColor: favoriteColor }}
+      >
+        {colors.map((color) => (
+          <option value={color} style={{ backgroundColor: color }}>
+            {color}
+          </option>
+        ))}
+      </select>
+
+      <button className="submit">Submit</button>
     </form>
   );
 };
